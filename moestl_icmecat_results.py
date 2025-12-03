@@ -3,14 +3,13 @@
 
 # ## Results for Möstl et al. (2026) ICMECAT paper
 # 
-# 
-# script to produce paper results for the ICMECAT paper Möstl et al. 2026, to be submitted to ApJL
+# script to produce paper results for the ICMECAT paper Möstl et al. 2026, to be submitted to ApJ
 # 
 # - uses environment dro, see /envs/env_dro.yml
 #  
-# - uses ICMECAT version 2.3, release 2025 April 9, update 2025 October 15, https://doi.org/10.6084/m9.figshare.6356420.v24 / this is figshare version 24
+# - uses ICMECAT version 2.3, released 2025 October 15 https://doi.org/10.6084/m9.figshare.6356420.v24 / this is figshare version 24
 # 
-# - additionally reads in Solar Orbiter and Parker Solar Probe data from data files, available in the figshare repository vesion 27 https://doi.org/10.6084/m9.figshare.11973693.v27
+# - additionally reads in Solar Orbiter and Parker Solar Probe data from data files, available in the figshare repository version 27 https://doi.org/10.6084/m9.figshare.11973693.v27
 # 
 # 
 # ---
@@ -169,6 +168,11 @@ sortpsp=np.argsort(ic.mo_sc_heliodistance[ipsp])
 print('0.0685 au in solar radii', 0.0685/rs)
 
 
+print('PSP time:',psp.time[0],psp.time[-1])
+print('lastest SolO time:',solo.time[0],solo.time[-1])
+
+
+
 # ### Figure (1) for ICMECAT times and distance
 
 # In[4]:
@@ -187,13 +191,13 @@ al=0.8
 ax1.plot(ic.mo_start_time[ipsp],ic.mo_sc_heliodistance[ipsp],'o',c='black', alpha=al,ms=ms,label='Parker Solar Probe')
 ax1.plot(ic.mo_start_time[isol],ic.mo_sc_heliodistance[isol],'o',c='black',markerfacecolor='white', alpha=1.0,ms=ms,label='Solar Orbiter')
 ax1.plot(ic.mo_start_time[ibep],ic.mo_sc_heliodistance[ibep],'o',c='darkblue',markerfacecolor='lightgrey', alpha=al,ms=ms,label='BepiColombo')
-ax1.plot(ic.mo_start_time[imav],ic.mo_sc_heliodistance[imav],'o',c='orangered', alpha=al,ms=ms,label='MAVEN')
+ax1.plot(ic.mo_start_time[iwin],ic.mo_sc_heliodistance[iwin],'o',c='mediumseagreen', alpha=al,ms=ms,label='Wind')
 ax1.plot(ic.mo_start_time[ista],ic.mo_sc_heliodistance[ista],'o',c='red', alpha=al,ms=ms, label='STEREO-A')
 
+ax1.plot(ic.mo_start_time[istb],ic.mo_sc_heliodistance[istb],'o',c='royalblue', alpha=al,ms=ms,label='STEREO-B')
 ax1.plot(ic.mo_start_time[imes],ic.mo_sc_heliodistance[imes],'o',c='coral', alpha=al,ms=ms,label='MESSENGER')
 ax1.plot(ic.mo_start_time[ivex],ic.mo_sc_heliodistance[ivex],'o',c='orange', alpha=al,ms=ms,label='Venus Express')
-ax1.plot(ic.mo_start_time[istb],ic.mo_sc_heliodistance[istb],'o',c='royalblue', alpha=al,ms=ms,label='STEREO-B')
-ax1.plot(ic.mo_start_time[iwin],ic.mo_sc_heliodistance[iwin],'o',c='mediumseagreen', alpha=al,ms=ms,label='Wind')
+ax1.plot(ic.mo_start_time[imav],ic.mo_sc_heliodistance[imav],'o',c='orangered', alpha=al,ms=ms,label='MAVEN')
 ax1.plot(ic.mo_start_time[ijun],ic.mo_sc_heliodistance[ijun],'o',c='black',markerfacecolor='yellow', alpha=1,ms=ms,label='Juno')
 ax1.plot(ic.mo_start_time[iuly],ic.mo_sc_heliodistance[iuly],'o',c='chocolate', alpha=al,ms=ms,label='Ulysses')
 
@@ -213,23 +217,25 @@ ax1.set_xlim([datetime.datetime(1990,1,1),datetime.datetime(2025,12,1)])
 
 ax1.set_yticks(np.arange(0,6,0.5))
 ax1.set_ylim([0,5.5])
+ax1.legend(loc='upper right', fontsize=9)
 
 
 ##############################################################
 
 ax4=plt.subplot(222,projection='polar')
 
-ax4.plot(np.radians(ic.mo_sc_long_heeq[iuly]),ic.mo_sc_heliodistance[iuly],'o',markersize=ms,c='brown', alpha=al, label='Ulysses')
-ax4.plot(np.radians(ic.mo_sc_long_heeq[imav]),ic.mo_sc_heliodistance[imav],'o',markersize=ms,c='orangered', alpha=al, label='MAVEN')
-ax4.plot(np.radians(ic.mo_sc_long_heeq[imes]),ic.mo_sc_heliodistance[imes],'o',markersize=ms,c='coral', alpha=al,label='MESSENGER')
-ax4.plot(np.radians(ic.mo_sc_long_heeq[ivex]),ic.mo_sc_heliodistance[ivex],'o',markersize=ms,c='orange', alpha=al,label='Venus Express')
-ax4.plot(np.radians(ic.mo_sc_long_heeq[istb]),ic.mo_sc_heliodistance[istb],'o',markersize=ms,c='royalblue', alpha=al,label='STEREO-B')
-ax4.plot(np.radians(ic.mo_sc_long_heeq[ijun]),ic.mo_sc_heliodistance[ijun],'o',markersize=ms,c='black',markerfacecolor='yellow',alpha=al,label='Juno')
-ax4.plot(np.radians(ic.mo_sc_long_heeq[ista]),ic.mo_sc_heliodistance[ista],'o',markersize=ms, c='red', alpha=al, label='STEREO-A')
-ax4.plot(np.radians(ic.mo_sc_long_heeq[iwin]),ic.mo_sc_heliodistance[iwin],'o',markersize=ms, c='mediumseagreen', alpha=al, label='Wind')
 ax4.plot(np.radians(ic.mo_sc_long_heeq[ipsp]),ic.mo_sc_heliodistance[ipsp],'o',markersize=ms, c='black', alpha=al,label='Parker Solar Probe')
 ax4.plot(np.radians(ic.mo_sc_long_heeq[isol]),ic.mo_sc_heliodistance[isol],'o',markersize=ms, c='black',markerfacecolor='white', alpha=al, label='Solar Orbiter')
 ax4.plot(np.radians(ic.mo_sc_long_heeq[ibep]),ic.mo_sc_heliodistance[ibep],'o',markersize=ms, c='darkblue',markerfacecolor='lightgrey', alpha=al, label='BepiColombo')
+ax4.plot(np.radians(ic.mo_sc_long_heeq[iwin]),ic.mo_sc_heliodistance[iwin],'o',markersize=ms, c='mediumseagreen', alpha=al, label='Wind')
+ax4.plot(np.radians(ic.mo_sc_long_heeq[ista]),ic.mo_sc_heliodistance[ista],'o',markersize=ms, c='red', alpha=al, label='STEREO-A')
+ax4.plot(np.radians(ic.mo_sc_long_heeq[istb]),ic.mo_sc_heliodistance[istb],'o',markersize=ms,c='royalblue', alpha=al,label='STEREO-B')
+ax4.plot(np.radians(ic.mo_sc_long_heeq[imes]),ic.mo_sc_heliodistance[imes],'o',markersize=ms,c='coral', alpha=al,label='MESSENGER')
+ax4.plot(np.radians(ic.mo_sc_long_heeq[ivex]),ic.mo_sc_heliodistance[ivex],'o',markersize=ms,c='orange', alpha=al,label='Venus Express')
+ax4.plot(np.radians(ic.mo_sc_long_heeq[imav]),ic.mo_sc_heliodistance[imav],'o',markersize=ms,c='orangered', alpha=al, label='MAVEN')
+ax4.plot(np.radians(ic.mo_sc_long_heeq[ijun]),ic.mo_sc_heliodistance[ijun],'o',markersize=ms,c='black',markerfacecolor='yellow',alpha=al,label='Juno')
+ax4.plot(np.radians(ic.mo_sc_long_heeq[iuly]),ic.mo_sc_heliodistance[iuly],'o',markersize=ms,c='brown', alpha=al, label='Ulysses')
+
 
 fsize=10
 frame='HEEQ'
@@ -242,6 +248,8 @@ ax4.text(0,0,'Sun', color='black', ha='center',fontsize=fsize-5,verticalalignmen
 ax4.text(0,1.1,'Earth', color='green', ha='center',fontsize=fsize-5,verticalalignment='center')
 ax4.scatter(0,0,s=100,c='yellow',alpha=1, edgecolors='black', linewidth=0.3)
 ax4.legend(bbox_to_anchor=(-0.35, 1.05),loc='upper left', fontsize=9)
+#ax4.legend(loc='upper right', fontsize=9)
+
 
 ##############################################################
 ax2=plt.subplot(223)
@@ -249,20 +257,20 @@ ax2=plt.subplot(223)
 ms=5
 al=0.7
 
-ax2.plot(ic.mo_start_time[iwin],ic.mo_sc_heliodistance[iwin],'o',c='mediumseagreen', alpha=al,ms=ms)
-ax2.plot(ic.mo_start_time[ista],ic.mo_sc_heliodistance[ista],'o',c='red', alpha=al,ms=ms)
-ax2.plot(ic.mo_start_time[ipsp],ic.mo_sc_heliodistance[ipsp],'o',c='black', alpha=al,ms=ms)
-ax2.plot(ic.mo_start_time[isol],ic.mo_sc_heliodistance[isol],'o',c='black',markerfacecolor='white', alpha=1.0,ms=ms)
-ax2.plot(ic.mo_start_time[ibep],ic.mo_sc_heliodistance[ibep],'o',c='darkblue',markerfacecolor='lightgrey', alpha=al,ms=ms)
+ax2.plot(ic.mo_start_time[iwin],ic.mo_sc_heliodistance[iwin],'o',c='mediumseagreen', alpha=al,ms=ms,label='Wind')
+ax2.plot(ic.mo_start_time[ista],ic.mo_sc_heliodistance[ista],'o',c='red', alpha=al,ms=ms,label='STEREO-A')
+ax2.plot(ic.mo_start_time[ipsp],ic.mo_sc_heliodistance[ipsp],'o',c='black', alpha=al,ms=ms,label='PSP')
+ax2.plot(ic.mo_start_time[isol],ic.mo_sc_heliodistance[isol],'o',c='black',markerfacecolor='white', alpha=1.0,ms=ms,label='Solar Orbiter')
+ax2.plot(ic.mo_start_time[ibep],ic.mo_sc_heliodistance[ibep],'o',c='darkblue',markerfacecolor='lightgrey', alpha=al,ms=ms,label='BepiColombo')
 
 #from data
 #psp
 ax2.plot(psp.time,psp.r,'k-',alpha=0.5)   ###########******* dont double plot for the beginning ********
-ax2.plot(psppos.time,psppos.r,'k-',alpha=0.5)
+ax2.plot(psppos.time,psppos.r,'k-',alpha=0.5, label='PSP')
 
 ax2.set_ylabel('Heliocentric distance $r$ [au]')
 ax2.set_yticks(np.arange(0,6,0.1))
-ax2.set_ylim([0,1.1])
+ax2.set_ylim([0,1.15])
 #ax1.tick_params(axis="y", labelsize=12)
 
 ax2.set_xlabel('Year')
@@ -272,12 +280,12 @@ myformat = mdates.DateFormatter('%Y')
 ax2.xaxis.set_major_formatter(myformat)
 
 #ax1.tick_params(axis="x", labelsize=12)
-
 #ax1.set_xlim([datetime.datetime(2007,1,1),datetime.datetime.utcnow()+datetime.timedelta(days=50)])
-
 
 ax2.set_xlim([datetime.datetime(2018,1,1),datetime.datetime(2030,1,1)])
 
+
+ax2.legend(loc='upper right',fontsize=10)#, rows=2)
 
 
 ##############################################################################
@@ -293,7 +301,7 @@ ax3.plot(ic.mo_start_time[isol],ic.mo_sc_lat_heeq[isol],'o',c='black',markerface
 ax3.plot(ic.mo_start_time[ibep],ic.mo_sc_lat_heeq[ibep],'o',c='darkblue',markerfacecolor='lightgrey', alpha=al,ms=ms, label='BepiColombo')
 
 #solar orbiter
-ax3.plot(solopos.time,np.rad2deg(solopos.lat),'g-', alpha=0.5)
+ax3.plot(solopos.time,np.rad2deg(solopos.lat),'-k', alpha=0.5,label='Solar Orbiter')
 
 ax3.set_xlim([datetime.datetime(2018,1,1),datetime.datetime(2030,1,1)])
 #ax3.set_xticks(np.arange(0,6,0.5))
@@ -311,7 +319,7 @@ years = mdates.YearLocator(1)   # every year
 ax3.xaxis.set_major_locator(years)
 myformat = mdates.DateFormatter('%Y')
 ax3.xaxis.set_major_formatter(myformat)
-ax3.legend(loc='upper left',fontsize=12)#, rows=2)
+ax3.legend(loc='upper left',fontsize=10)#, rows=2)
 
 ################################
 
@@ -527,8 +535,8 @@ def plot_boundaries(ax,index):
     ax.axvline(ic.mo_start_time[index],color='black',linewidth=lw,alpha=al)
     ax.axvline(ic.mo_end_time[index],color='black',linewidth=lw,alpha=al)
 
-lw=1.3
-al=0.7
+lw=1.5
+al=0.9
 
 #################################
 ax1 = plt.subplot(321) 
@@ -541,7 +549,7 @@ ax1.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %H:00') )
 ax1.annotate('PSP 2022 Sep 5',xy=(0.85,0.88),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 ax1.annotate('0.0632 au',xy=(0.85,0.08),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 plot_boundaries(ax1,i1)
-ax1.set_xlim(datetime.datetime(2022,9,5,13),datetime.datetime(2022,9,6,10))
+ax1.set_xlim(datetime.datetime(2022,9,5,14),datetime.datetime(2022,9,6,7))
 ax1.xaxis.set_major_locator(mdates.HourLocator(interval=4))
 ax1.xaxis.set_minor_locator(mdates.HourLocator(interval=1))
 ax1.tick_params(which="both", bottom=True)
@@ -554,11 +562,11 @@ ax2.plot(sc2.time,sc2.by,'-g',label='By',linewidth=lw)
 ax2.plot(sc2.time,sc2.bz,'-b',label='Bz',linewidth=lw)
 ax2.plot(sc2.time,sc2.bt,'-k',label='Btotal',lw=lw)
 ax2.set_ylabel('B [nT] RTN')
-ax2.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %Hh') )
+ax2.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %H:00') )
 ax2.annotate('PSP 2022 Jun 2',xy=(0.85,0.88),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 ax2.annotate('0.0705 au',xy=(0.85,0.08),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 plot_boundaries(ax2,i2)
-ax2.set_xlim(datetime.datetime(2022,6,2,8),datetime.datetime(2022,6,2,18))
+ax2.set_xlim(datetime.datetime(2022,6,2,9),datetime.datetime(2022,6,2,17))
 ax2.xaxis.set_major_locator(mdates.HourLocator(interval=2))
 ax2.xaxis.set_minor_locator(mdates.HourLocator(interval=1))
 ax2.tick_params(which="both", bottom=True)
@@ -572,7 +580,7 @@ ax3.plot(sc3.time,sc3.bz,'-b',label='$B_{N}$',linewidth=lw)
 ax3.plot(sc3.time,sc3.bt,'-k',label='$|B|$',lw=lw)
 
 ax3.set_ylabel('B [nT] RTN')
-ax3.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %Hh') )
+ax3.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %H:00') )
 ax3.annotate('PSP 2021 Apr 30',xy=(0.85,0.88),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 ax3.annotate('0.0892 au',xy=(0.85,0.08),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 
@@ -591,14 +599,15 @@ ax4.plot(sc4.time,sc4.bz,'-b',label='Bz',linewidth=lw)
 ax4.plot(sc4.time,sc4.bt,'-k',label='Btotal',lw=lw)
 
 ax4.set_ylabel('B [nT] RTN')
-ax4.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %Hh') )
+ax4.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %H:00') )
 ax4.annotate('PSP 2024 Dec 22',xy=(0.85,0.88),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 ax4.annotate('0.1354 au',xy=(0.85,0.08),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 
 plot_boundaries(ax4,i4)
-ax4.set_xlim(datetime.datetime(2024,12,22,1),datetime.datetime(2024,12,23,1))
+ax4.set_xlim(datetime.datetime(2024,12,22,1),datetime.datetime(2024,12,22,15))
+ax4.set_ylim(-350,350)
 ax4.tick_params(which="both", bottom=True)
-ax4.xaxis.set_major_locator(mdates.HourLocator(interval=6))
+ax4.xaxis.set_major_locator(mdates.HourLocator(interval=3))
 ax4.xaxis.set_minor_locator(mdates.HourLocator(interval=1))
 ax4.tick_params(which="both", bottom=True)
 
@@ -611,14 +620,14 @@ ax5.plot(sc5.time,sc5.bz,'-b',label='Bz',linewidth=lw)
 ax5.plot(sc5.time,sc5.bt,'-k',label='Btotal',lw=lw)
 
 ax5.set_ylabel('B [nT] RTN')
-ax5.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %Hh') )
+ax5.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %H:00') )
 ax5.annotate('PSP 2024 Oct 4',xy=(0.85,0.88),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 ax5.annotate('0.2056 au',xy=(0.85,0.08),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 
 plot_boundaries(ax5,i5)
-ax5.set_xlim(datetime.datetime(2024,10,4,1),datetime.datetime(2024,10,4,15))
+ax5.set_xlim(datetime.datetime(2024,10,3,20),datetime.datetime(2024,10,4,12))
 ax5.tick_params(which="both", bottom=True)
-ax5.xaxis.set_major_locator(mdates.HourLocator(interval=6))
+ax5.xaxis.set_major_locator(mdates.HourLocator(interval=4))
 ax5.xaxis.set_minor_locator(mdates.HourLocator(interval=1))
 ax5.tick_params(which="both", bottom=True)
 
@@ -631,14 +640,14 @@ ax6.plot(sc6.time,sc6.bz,'-b',label='Bz',linewidth=lw)
 ax6.plot(sc6.time,sc6.bt,'-k',label='Btotal',lw=lw)
 
 ax6.set_ylabel('B [nT] RTN')
-ax6.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %Hh') )
+ax6.xaxis.set_major_formatter( matplotlib.dates.DateFormatter('%b-%d %H:00') )
 ax6.annotate('PSP 2023 Mar 13',xy=(0.85,0.88),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 ax6.annotate('0.2187 au',xy=(0.85,0.08),xycoords='axes fraction',fontsize=11,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 
 plot_boundaries(ax6,i6)
-ax6.set_xlim(datetime.datetime(2023,3,13,5),datetime.datetime(2023,3,13,23))
+ax6.set_xlim(datetime.datetime(2023,3,13,5),datetime.datetime(2023,3,13,18))
 ax6.tick_params(which="both", bottom=True)
-ax6.xaxis.set_major_locator(mdates.HourLocator(interval=6))
+ax6.xaxis.set_major_locator(mdates.HourLocator(interval=3))
 ax6.xaxis.set_minor_locator(mdates.HourLocator(interval=1))
 ax6.tick_params(which="both", bottom=True)
 
@@ -1088,13 +1097,12 @@ ax.plot(fitx,powerlaw(fitx,param[0],param[1]),'-k', zorder=5, label='mean($B_{MO
 #with errors 2 std
 ax.plot(fitx,powerlaw(fitx,param[0]-2*perr[0],fit_lm[0][1])-2*perr[0],'-k',alpha=0.5, zorder=5)
 ax.plot(fitx,powerlaw(fitx,param[0]+2*perr[0],fit_lm[0][1])+2*perr[0],'-k',alpha=0.5, zorder=5)
-
 ax.plot(fitx,powerlaw(fitx,param2[0],param2[1]),'-.r', zorder=5, label='max($B_{MO}$) fit')
 
-formulastring=r'$\mathrm{mean}(B_{MO}(R)) = '+str(np.round(param[0],2))+r' \times R^{'+str(np.round(param[1],2))+'}$'
+formulastring=r'$\langle B_{MO}(R) \rangle  = '+str(np.round(param[0],2))+r' \times R^{'+str(np.round(param[1],2))+'}$'
 ax.annotate(formulastring,xy=(0.403,0.73),xycoords='axes fraction',fontsize=15,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 
-formulastring=r'$\mathrm{max}(B_{MO}(R)) = '+str(np.round(param2[0],2))+r' \times R^{'+str(np.round(param2[1],2))+'}$'
+formulastring=r'$\max(B_{MO}(R)) = '+str(np.round(param2[0],2))+r' \times R^{'+str(np.round(param2[1],2))+'}$'
 ax.annotate(formulastring,xy=(0.4,0.66),xycoords='axes fraction',fontsize=15,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 
 ax.legend(loc=1,fontsize=11)
@@ -1107,8 +1115,8 @@ ax2.set_ylim(-0.5,3.1)
 ax2.set_xlabel(r'$\log_{10}(R \text{[au]})$')
 ax2.set_ylabel(r'$\log_{10}(B \text{[nT]})$')
 ax2.text(-0.15, 1.05, '(b)', transform=ax2.transAxes, fontsize=16, fontweight='bold', va='top')
-strd=f'{np.round(10**d1, 2):.2f}+'
-formulastring=r'$\mathrm{mean}(B_{MO}(R)) ='+strd+r' \times R^{'+str(np.round(k1,2))+'}$'
+strd=f'{np.round(10**d1, 2):.2f}'
+formulastring=r'$\langle B_{MO}(R) \rangle ='+strd+r' \times R^{'+str(np.round(k1,2))+'}$'
 ax2.annotate(formulastring,xy=(0.4,0.1),xycoords='axes fraction',fontsize=12,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 
 
@@ -1121,8 +1129,8 @@ ax3.set_xlabel(r'$\log_{10}(R \text{[au]})$')
 ax3.set_ylabel(r'$\log_{10}(B \text{[nT]})$')
 ax3.text(-0.15, 1.05, '(c)', transform=ax3.transAxes, fontsize=16, fontweight='bold', va='top')
 
-strd=f'{np.round(10**d2, 2):.2f}+'
-formulastring=r'$\mathrm{mean}(B_{MO}(R)) ='+strd+r' \times R^{'+str(np.round(k2,2))+'}$'
+strd=f'{np.round(10**d2, 2):.2f}'
+formulastring=r'$ \langle B_{MO}(R) \rangle ='+strd+r' \times R^{'+str(np.round(k2,2))+'}$'
 ax3.annotate(formulastring,xy=(0.4,0.1),xycoords='axes fraction',fontsize=12,ha='center',bbox=dict(boxstyle='round', facecolor='white'))
 
 #plt.tight_layout()
@@ -1135,7 +1143,7 @@ plt.savefig('results/fig4_br_mo.pdf', dpi=300,bbox_inches='tight')
 
 # #### Power law with multipole expansion
 
-# In[53]:
+# In[13]:
 
 
 print('B(r) for MO_Bmean')
@@ -1195,7 +1203,7 @@ pcov10=fit_dogbox10[1]
 perr10 = np.sqrt(np.diag(pcov10))
 print('Results in detail:')
 print('Parameters a , y = a x^-1.57 + a1*x^-5: ',np.round(param10,3))
-print('3 standard deviation on a and a1', 3*np.round(perr10,3))
+print('3 standard deviation on a and a1', 3*perr10)
 print()
 print()
 
@@ -1213,7 +1221,88 @@ plt.yscale('log')
 plt.xscale('log')
 
 
-# In[87]:
+# ### same for quiet Sun 
+# 
+
+# In[14]:
+
+
+print('B(r) for MO_Bmean')
+
+r=ic.mo_sc_heliodistance
+b=ic.mo_bmean
+
+#remove events where one or both are nan
+rem=np.where(np.logical_or(np.isnan(r), np.isnan(b)))[0]
+r=r.drop(rem)
+b=b.drop(rem)
+
+#remove ulysses because high latitude
+#r=r.drop(iuly)
+#b=b.drop(iuly)
+
+#select distance range
+ind1au=np.where(np.logical_and(ic.mo_sc_heliodistance < 6.0,ic.mo_sc_heliodistance > 0.0))[0]
+
+rmean=np.array(r[ind1au])
+bmean=np.array(b[ind1au])
+
+print('fit is done for ',len(rmean),' events')
+#solar radius in au
+#rs=1*const.R_sun/const.au
+print('start fit at 1 solar radii, in AU: ',np.round(rs,4))
+fitx=np.linspace(1*rs,5.5,num=10000)
+
+
+###### define quiet Sun point at 46 Gauss
+
+gauss=1e5 #1 Gauss= 10^5 nT
+#sunspot field strength at 1 solar radii
+#https://link.springer.com/article/10.1007/s11207-006-0265-4
+#average 2000 Gauss, or 0.2 Tesla, or 2 x 10^8 nT
+sunspot_r=rs  
+sunspot_b=46*gauss              #general value quiet sun
+
+#add to array for fitting
+bmean=np.append(bmean,sunspot_b)
+rmean=np.append(rmean,sunspot_r)
+
+#def multipower(x,a,k,a1,k1,a2,k2):
+#    return a*x**k + a1*x**k1 + a2*x**k2
+
+
+def multipower2(x,a,a1):
+    return a*x**(-1.57) + a1*x**(-4) 
+
+#def power(x,a,k):
+#    return a*x**k
+
+fit_dogbox20=scipy.optimize.curve_fit(multipower2, rmean,bmean,method='lm',full_output=True)
+param20=fit_dogbox20[0]
+print(param20[0],param20[1])
+pcov20=fit_dogbox20[1]
+perr20 = np.sqrt(np.diag(pcov20))
+print('Results in detail:')
+print('Parameters a , y = a x^-1.57 + a1*x^-4: ',np.round(param20,3))
+print('3 standard deviation on a and a1', 3*perr20)
+print()
+print()
+
+plt.plot(rmean,bmean,'ok', ms=2,alpha=0.5)
+plt.plot(fitx,multipower2(fitx,param20[0],param20[1]),color='orange',linewidth=0.5,zorder=3)
+
+plt.plot(fitx,powerlaw(fitx,param[0],param[1]),color='blue',linewidth=0.5,zorder=3)
+#plt.plot(fitx,multipower2(fitx,param10[0],param10[1],param10[2],param10[3],param10[4],param10[5]),'-b')
+#plt.plot(fitx,power(fitx,param10[0],param10[1]),'-b')
+
+
+#same fit in solar radii units?
+
+plt.yscale('log')
+plt.xscale('log')
+
+
+# In[15]:
 
 
 sns.set_context("talk")     
@@ -1232,10 +1321,10 @@ ax.plot(psp.r,psp.bt,color='mediumseagreen',linewidth=0.2, label='Parker Solar P
 #plot SolO data Btotal
 ax.plot(solo.r,solo.bt,color='lightblue',linewidth=0.2, label='Solar Orbiter |B|')
 
-ax.plot(ic.mo_sc_heliodistance[imes],ic.mo_bmean[imes],'o',c='coral', alpha=al,ms=ms,label='MESSENGER ICMEs')
-ax.plot(ic.mo_sc_heliodistance[ibep],ic.mo_bmean[ibep],'o',c='darkblue',markerfacecolor='lightgrey', alpha=al,ms=ms,label='BepiColombo ICMEs')
+ax.plot(ic.mo_sc_heliodistance[imes],ic.mo_bmean[imes],'o',c='coral', alpha=al,ms=ms,label='MESSENGER ICMEs', zorder=4)
+ax.plot(ic.mo_sc_heliodistance[ibep],ic.mo_bmean[ibep],'o',c='darkblue',markerfacecolor='lightgrey', alpha=al,ms=ms,label='BepiColombo ICMEs',zorder=4)
 ax.plot(ic.mo_sc_heliodistance[ipsp],ic.mo_bmean[ipsp],'o',c='black', alpha=1.0,ms=ms, label='Parker Solar Probe ICMEs',zorder=4)
-ax.plot(ic.mo_sc_heliodistance[isol],ic.mo_bmean[isol],'o',c='black', markerfacecolor='white',alpha=al,ms=ms, label='Solar Orbiter ICMEs')
+ax.plot(ic.mo_sc_heliodistance[isol],ic.mo_bmean[isol],'o',c='black', markerfacecolor='white',alpha=al,ms=ms, label='Solar Orbiter ICMEs',zorder=4)
 
 ax.set_xticks(np.arange(0,0.5,0.05))
 ax_max_x=0.33
@@ -1266,17 +1355,22 @@ ax.plot(fitx,powerlaw(fitx,param[0],param[1]),'-k',label=r'$\langle B_{MO} \rang
 #ax3.plot(fitx,powerlaw(fitx,param[0]-3*perr[0],fit_lm[0][1])-3*perr[0],'--k',alpha=0.5)
 #ax3.plot(fitx,powerlaw(fitx,param[0]+3*perr[0],fit_lm[0][1])+3*perr[0],'--k',alpha=0.5)
 
-############## combined multipole power law
+############## combined multipole power law to AR
 ax.plot(fitx,multipower(fitx,param10[0],param10[1]),color='tab:orange',linewidth=2,zorder=3, label='multipole fit, k1=-1.57, k2=-6')
 
+
+############## combined multipole power law to quiet Sun
+ax.plot(fitx,multipower2(fitx,param20[0],param20[1]),color='tab:blue',linewidth=2,zorder=3, label='multipole fit, k1=-1.57, k2=-4')
+
+
 ########### solar wind model
-ax.plot(fitx,Brsw2,color='tab:blue',linestyle='-.',label='solar wind model')
+#ax.plot(fitx,Brsw2,color='black',linestyle='-.',label='solar wind model')
 
 
-####### #start from quiet Sun
-n3=-3
-const_quiet1=0.46
-ax.plot(fitx,powerlaw(fitx,const_quiet1,n3),color='tab:red',label='dipole field k=-3')
+####### # power laws with different exponents
+#n3=-3
+#const_quiet1=0.46
+#ax.plot(fitx,powerlaw(fitx,const_quiet1,n3),color='tab:red',label='dipole field k=-3')
 
 #active region with n-3
 #const2=20
@@ -1319,14 +1413,15 @@ ax.axvspan(16*rs, 20*rs, alpha=0.2, color='skyblue')
 
 
 #PSP minimum orbit
-ax.axvline(np.min(psp.r),linestyle='-', color='b', linewidth=0.5)
+psp_min=np.min(psp.r)
+ax.axvline(psp_min,linestyle='-', color='b', linewidth=0.5)
 
 ###################### plot annotations
 annotfs=13
 ax.annotate(r'9.87 R$_{\odot}$ PSP closest approach',xy=(psp_min+0.001,5*1e7),xycoords='data',fontsize=annotfs,ha='left')
 #ax.annotate('3 Rs',xy=(0.015,3*1e4),xycoords='data',fontsize=annotfs,ha='left')
 ax.annotate('1 R$_{\odot}$',xy=(0.0048,5*1e8),xycoords='data',fontsize=annotfs,ha='left')
-ax.annotate('16-20 R$_{\odot}$, Alfvén surface',xy=(20.1*rs,2*1e8),xycoords='data',fontsize=annotfs,ha='left')
+ax.annotate('16-20 R$_{\odot}$  Alfvén surface',xy=(16.1*rs,2*1e8),xycoords='data',fontsize=annotfs,ha='left')
 ax.annotate('Sunspots',xy=(0.005,1e8),xycoords='data',fontsize=annotfs,ha='left',zorder=2)
 #ax.annotate('Coronal loops',xy=(0.0065,3*1e6),xycoords='data',fontsize=annotfs,ha='left')
 ax.annotate('Quiet Sun',xy=(0.0065,3*1e6),xycoords='data',fontsize=annotfs,ha='left')
@@ -1354,7 +1449,7 @@ plt.savefig('results/fig5_br_mo_zoom.pdf', dpi=300,bbox_inches='tight')
 
 # #### same with zoom in on close-in solar distances, for trying out power laws
 
-# In[55]:
+# In[17]:
 
 
 sns.set_context("talk")     
@@ -1471,8 +1566,6 @@ ax.annotate('Quiet Sun',xy=(0.0042,80*gauss),xycoords='data',fontsize=annotfs,ha
 ax.annotate('1 Gauss',xy=(1.3*0.0048,1.2*1e5),xycoords='data',fontsize=annotfs,ha='left')
 
 
-########## solar wind model
-ax.plot(fitx,powerlaw(fitx,const_quiet1,n3),'-g',label='power law for coronal decay n=-3')
 
 
 #try out powerlaw from 1 Rs with -1, -2, -3 decay index n
@@ -1488,6 +1581,10 @@ const_quiet1=0.5
 #const_quiet1=0.03
 ax.plot(fitx,powerlaw(fitx,const_quiet1,n3),'-g',label='power law for coronal decay n=-3')
 
+
+
+########## solar wind model
+ax.plot(fitx,powerlaw(fitx,const_quiet1,n3),'-g',label='power law for coronal decay n=-3')
 
 #active region sunspots
 const1=2*1e1
@@ -1511,6 +1608,9 @@ ax.plot(fitx,multipower(fitx,param10[0],param10[1]),color='red',linewidth=2,zord
 
 ax.legend(fontsize=12,facecolor='white')
 
+
+############## combined multipole power law
+ax.plot(fitx,multipower(fitx,param10[0],param10[1]),color='tab:orange',linewidth=2,zorder=3, label='multipole fit, k1=-1.57, k2=-6')
 
 
 ########################## add solar data points
@@ -1552,6 +1652,18 @@ coronal_b1=50*gauss
 
 plt.tight_layout()
 plt.savefig('results/fig5_br_mo_zoom_close.png', dpi=150,bbox_inches='tight')
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
