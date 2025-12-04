@@ -3,7 +3,7 @@
 
 # ## Results for Möstl et al. (2026) ICMECAT paper
 # 
-# script to produce paper results for the ICMECAT paper Möstl et al. 2026, to be submitted to ApJ
+# script to produce paper results for the ICMECAT paper Möstl et al. 2026, submitted to ApJ 4 December 2025
 # 
 # - uses environment dro, see /envs/env_dro.yml
 #  
@@ -18,7 +18,6 @@
 # - **Salman+ 2024** PSP events, but before Sep 2022 https://iopscience.iop.org/article/10.3847/1538-4357/ad320c
 # - **Mann+ 2023** A&A solar wind model https://www.aanda.org/articles/aa/full_html/2023/11/aa45050-22/aa45050-22.html
 # - **Livingston+ 2006** sunspot field strength at 1 solar radii:https://link.springer.com/article/10.1007/s11207-006-0265-4 on the order of kiloGauss or 10^8 nT (1 Gauss is 10^5 nT)
-# - **Luo and Rui Liu 2022** decay index profiles for ARs, but only in AR, too close - https://iopscience.iop.org/article/10.3847/1538-4357/ac5b06 on the order of 10 Gauss which is 10^6 nT 
 # - **Trelles Arjona+ 2021**, https://iopscience.iop.org/article/10.3847/2041-8213/ac0af2#:~:text=On%20average%2C%20the%20quiet%2DSun,a%20strength%20of%2046%20G.
 # 
 # 
@@ -32,7 +31,7 @@
 # 
 # 
 
-# In[1]:
+# In[24]:
 
 
 import pickle 
@@ -1051,7 +1050,7 @@ print()
 
 # ### Figure (4) B(r) power laws
 
-# In[12]:
+# In[20]:
 
 
 sns.set_context("talk")     
@@ -1095,8 +1094,8 @@ ax.set_yscale('log')
 ########### plot fits
 ax.plot(fitx,powerlaw(fitx,param[0],param[1]),'-k', zorder=5, label='mean($B_{MO}$) fit')
 #with errors 2 std
-ax.plot(fitx,powerlaw(fitx,param[0]-2*perr[0],fit_lm[0][1])-2*perr[0],'-k',alpha=0.5, zorder=5)
-ax.plot(fitx,powerlaw(fitx,param[0]+2*perr[0],fit_lm[0][1])+2*perr[0],'-k',alpha=0.5, zorder=5)
+ax.plot(fitx,powerlaw(fitx,param[0]-2*perr[0],fit_lm[0][1])-2*perr[0],'--k',alpha=0.5, zorder=5,label='mean($B_{MO}$) fit error')
+ax.plot(fitx,powerlaw(fitx,param[0]+2*perr[0],fit_lm[0][1])+2*perr[0],'--k',alpha=0.5, zorder=5)
 ax.plot(fitx,powerlaw(fitx,param2[0],param2[1]),'-.r', zorder=5, label='max($B_{MO}$) fit')
 
 formulastring=r'$\langle B_{MO}(R) \rangle  = '+str(np.round(param[0],2))+r' \times R^{'+str(np.round(param[1],2))+'}$'
@@ -1302,7 +1301,7 @@ plt.yscale('log')
 plt.xscale('log')
 
 
-# In[15]:
+# In[22]:
 
 
 sns.set_context("talk")     
@@ -1317,9 +1316,9 @@ ax.set_xlabel('Heliocentric distance $R$ [au]')
 ax.set_ylabel('$B$ [nT]')
 
 #plot psp data Btotal
-ax.plot(psp.r,psp.bt,color='mediumseagreen',linewidth=0.2, label='Parker Solar Probe |B|',alpha=0.9)
+ax.plot(psp.r,psp.bt,color='mediumseagreen',linewidth=0.9, label='Parker Solar Probe |B|',alpha=1.0)
 #plot SolO data Btotal
-ax.plot(solo.r,solo.bt,color='lightblue',linewidth=0.2, label='Solar Orbiter |B|')
+ax.plot(solo.r,solo.bt,color='mediumblue',linewidth=0.9, label='Solar Orbiter |B|',alpha=0.5)
 
 ax.plot(ic.mo_sc_heliodistance[imes],ic.mo_bmean[imes],'o',c='coral', alpha=al,ms=ms,label='MESSENGER ICMEs', zorder=4)
 ax.plot(ic.mo_sc_heliodistance[ibep],ic.mo_bmean[ibep],'o',c='darkblue',markerfacecolor='lightgrey', alpha=al,ms=ms,label='BepiColombo ICMEs',zorder=4)
@@ -1449,7 +1448,7 @@ plt.savefig('results/fig5_br_mo_zoom.pdf', dpi=300,bbox_inches='tight')
 
 # #### same with zoom in on close-in solar distances, for trying out power laws
 
-# In[17]:
+# In[23]:
 
 
 sns.set_context("talk")     
@@ -1651,19 +1650,7 @@ coronal_b1=50*gauss
 #print(rs_in_Mm)
 
 plt.tight_layout()
-plt.savefig('results/fig5_br_mo_zoom_close.png', dpi=150,bbox_inches='tight')
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+plt.savefig('results/br_mo_zoom_close.png', dpi=150,bbox_inches='tight')
 
 
 # In[ ]:
