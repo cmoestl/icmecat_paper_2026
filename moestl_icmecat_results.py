@@ -3,13 +3,15 @@
 
 # ## Results for Möstl et al. (2026) ICMECAT paper
 # 
-# script to produce paper results for the ICMECAT paper Möstl et al. 2026, submitted to ApJ 4 December 2025
+# script to produce paper results for the ICMECAT paper Möstl et al. 2026, submitted to ApJ 4 December 2025, revised March  2026
 # 
 # - uses environment dro, see /envs/env_dro.yml
 #  
 # - uses ICMECAT version 2.3, released 2025 October 15 https://doi.org/10.6084/m9.figshare.6356420.v24 / this is figshare version 24
 # 
 # - additionally reads in Solar Orbiter and Parker Solar Probe data from data files, available in the figshare repository version 27 https://doi.org/10.6084/m9.figshare.11973693.v27
+# 
+# - In the future, may look at power laws for each B component, total ICME B field (sheath + MO), and their solar cycle dependence
 # 
 # 
 # ---
@@ -22,16 +24,11 @@
 # 
 # 
 # ---
-# ### Ideas 
-# 
-# - maybe look at power laws for each B component
-# - total ICME B field (sheath + MO)
-# - solar cycle dependence
 # 
 # 
 # 
 
-# In[24]:
+# In[1]:
 
 
 import pickle 
@@ -50,22 +47,23 @@ import astropy.constants as const
 from sunpy.time import parse_time
 from scipy.optimize import curve_fit
 
-
 #one solar radius in au
 rs=(const.R_sun/const.au).value
 print(f'1 solar radii in au {rs:.5f}')
 scale=1/rs #scaling factor au to Rs
 print(f'1 au in solar radii {scale:.5f}')
 
-
 #convert to script
 os.system('jupyter nbconvert --to script moestl_icmecat_results.ipynb')
 print(os.system('pwd'))
 
-
-#define powerlaw function
+# define powerlaw function
 def powerlaw(x, a, b):
     return a*x**b
+
+# define linear fit function
+def linear(x, k, d):
+    return k * x + d
 
 
 # ## load data
@@ -673,18 +671,39 @@ print('saved as ',plotfile)
 
 # #### Bmean in MO
 # 
-# results: for distance 
+# results without log-log transformation:
 # 
-# < 1.1 a and b are [10.742 -1.568] \
-# < 1.0 a and b are [10.71  -1.569]\
-# < 0.8 a and b are [10.67  -1.571] \
-# < 0.5 a and b are [10.24  -1.588] \
-# with all and Ulysses [10.74  -1.568] \
-# without Ulysses completely similar [10.741 -1.568]
+# Starting point always near Sun, different end points:
 # 
+# < 1.02 au Parameters a and b, y = a x^b: [10.742 -1.568]
+# 3 standard deviation on a and b [0.669 0.03 ]
+# 
+# < 6.0 au (all events)
+# Parameters a and b, y = a x^b: [10.722 -1.569]
+# 3 standard deviation on a and b [0.579 0.024]
+# 
+# < 0.5
+# Parameters a and b, y = a x^b: [10.184 -1.59 ]
+# 3 standard deviation on a and b [2.421 0.105]
+# 
+# < 0.8
+# Parameters a and b, y = a x^b: [10.626 -1.572]
+# 3 standard deviation on a and b [1.341 0.057]
+# 
+# 
+# removing Ulysses makes no difference
+# 
+# for > 1.02 au (outer heliosphere) with direct fit (no log-log):
+# Parameters a and b, y = a x^b: [ 9.774 -1.331]
+# 3 standard deviation on a and b [0.774 0.225]
 
 # In[7]:
 
+
+########################## set data range for fits
+inner_boundary=0.0
+outer_boundary=6.0
+############################
 
 print('B(r) for MO_Bmean')
 
@@ -701,7 +720,7 @@ b=b.drop(rem)
 #b=b.drop(iuly)
 
 #select distance range
-ind1au=np.where(np.logical_and(ic.mo_sc_heliodistance < 6.0,ic.mo_sc_heliodistance > 0.0))[0]
+ind1au=np.where(np.logical_and(ic.mo_sc_heliodistance < outer_boundary,ic.mo_sc_heliodistance > inner_boundary))[0]
 
 rmean=r[ind1au]
 bmean=b[ind1au]
@@ -815,41 +834,21 @@ ax.plot(fitx,powerlaw(fitx,param2[0],param2[1]),'-r',label='MO Bmax')
 ax.legend()
 
 
-# ### redo fit in log log space
-# 
-# for all up to 5.5 au
-# Slope: -1.4653 ± 0.0155
-# Intercept (nonlog): 10.1984 ± 0.0044
-# 
-# for up to 1.1 au
-# Slope: -1.5947 ± 0.0303
-# Intercept (nonlog): 9.9153 ± 0.0051
-# 
-# from 0.8 to 1.05 au
-# Slope: -1.4706 ± 0.3472
-# Intercept (nonlog): 9.9243 ± 0.0067
-# 
-# 
-# from 0 to 1.05 au
-# Slope: -1.5914 ± 0.0307
-# Intercept (nonlog): 9.9354 ± 0.0053
-# 
+# ### Redo fits in log-log space
+# Check whether the innermost PSP events act as outliers
 
 # In[9]:
 
 
 print('B(r) for MO_Bmean')
 
+print('results for 3 distance ranges')
 
 #print('start fit at 1 solar radii, in AU: ',np.round(rs,4))
 fitx=np.linspace(1*rs,5.5,num=10000)
 
-####linear fit 
-def linear(x, k, d):
-    return k * x + d
 
-
-######################## fit 1
+######################## fit 1 inner heliosphere
 r=ic.mo_sc_heliodistance
 b=ic.mo_bmean
 
@@ -882,10 +881,9 @@ print(f"Intercept (nonlog): {10**d1:.4f} ± {d1_err:.4f}")
 print('fit distance range',mindistfit1,'-',maxdistfit1,' au')
 ###################
 print()
-print()
 
 
-######################## fit 2
+######################## fit 2 all
 r=ic.mo_sc_heliodistance
 b=ic.mo_bmean
 
@@ -917,20 +915,62 @@ k2_err, d2_err = np.sqrt(np.diag(covariance2))
 print(f"Slope: {k2:.4f} ± {k2_err:.4f}")
 print(f"Intercept (nonlog): {10**d2:.4f} ± {d2_err:.4f}")
 print('fit distance range',mindistfit2,'-',maxdistfit2,' au')
+print()
+
+
+######################## fit 3 outer heliosphere
+r=ic.mo_sc_heliodistance
+b=ic.mo_bmean
+
+#remove events where one or both are nan
+rem=np.where(np.logical_or(np.isnan(r), np.isnan(b)))[0]
+r=r.drop(rem)
+b=b.drop(rem)
+
+#remove ulysses because high latitude
+#r=r.drop(iuly)
+#b=b.drop(iuly)
+
+#select distance range
+mindistfit3=1.02
+maxdistfit3=6.0
+indg1au=np.where(np.logical_and(ic.mo_sc_heliodistance < maxdistfit3,ic.mo_sc_heliodistance > mindistfit3))[0]
+
+rmeanlog3=np.log10(r[indg1au])
+bmeanlog3=np.log10(b[indg1au])
+#rmean=r
+#bmean=b
+
+print('fit is done for ',len(rmeanlog3),' events')
+
+# Fit with covariance matrix
+params3, covariance3 = curve_fit(linear, rmeanlog3, bmeanlog3)
+k3, d3 = params3
+k3_err, d3_err = np.sqrt(np.diag(covariance3))
+print(f"Slope: {k3:.4f} ± {k3_err:.4f}")
+print(f"Intercept (nonlog): {10**d3:.4f} ± {d3_err:.4f}")
+print('fit distance range',mindistfit3,'-',maxdistfit3,' au')
 
 
 #------plot 
-fig=plt.figure(3,figsize=(12,10),dpi=50)
-ax=plt.subplot(211)
+fig=plt.figure(3,figsize=(15,10),dpi=100)
+ax=plt.subplot(311)
 ax.plot(rmeanlog1,bmeanlog1,'ok', markersize=1)
 ax.plot(rmeanlog1,linear(rmeanlog1,k1,d1),'-k')
 
 
 #------plot 
-fig=plt.figure(4,figsize=(12,10),dpi=50)
-ax=plt.subplot(211)
-ax.plot(rmeanlog2,bmeanlog2,'ok', markersize=1)
-ax.plot(rmeanlog2,linear(rmeanlog2,k2,d2),'-k')
+ax2=plt.subplot(312)
+ax2.plot(rmeanlog2,bmeanlog2,'ok', markersize=1)
+ax2.plot(rmeanlog2,linear(rmeanlog2,k2,d2),'-k')
+ax2.plot(rmeanlog1,linear(rmeanlog1,k1,d1),'-g')
+ax2.plot(rmeanlog3,linear(rmeanlog3,k3,d3),'-b')
+
+
+#------plot 
+ax3=plt.subplot(313)
+ax3.plot(rmeanlog3,bmeanlog3,'ok', markersize=1)
+ax3.plot(rmeanlog3,linear(rmeanlog3,k3,d3),'-k')
 
 
 # ### Solar wind models
@@ -969,7 +1009,7 @@ ax.legend()
 
 
 
-# ### Component fits, need to check
+# ### Component fitsnot used here
 
 # In[11]:
 
@@ -1050,7 +1090,7 @@ print()
 
 # ### Figure (4) B(r) power laws
 
-# In[20]:
+# In[12]:
 
 
 sns.set_context("talk")     
@@ -1301,7 +1341,7 @@ plt.yscale('log')
 plt.xscale('log')
 
 
-# In[22]:
+# In[15]:
 
 
 sns.set_context("talk")     
@@ -1448,7 +1488,7 @@ plt.savefig('results/fig5_br_mo_zoom.pdf', dpi=300,bbox_inches='tight')
 
 # #### same with zoom in on close-in solar distances, for trying out power laws
 
-# In[23]:
+# In[16]:
 
 
 sns.set_context("talk")     
@@ -1652,6 +1692,8 @@ coronal_b1=50*gauss
 plt.tight_layout()
 plt.savefig('results/br_mo_zoom_close.png', dpi=150,bbox_inches='tight')
 
+
+# end of script
 
 # In[ ]:
 
