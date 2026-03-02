@@ -12,7 +12,7 @@ A file containing spacecraft positions as a numpy array in pickle format (positi
 
 Data files for Parker Solar Probe (psp_2018_now_rtn.p) and Solar Orbiter (solo_2020_now_rtn.p) in pickle format as numpy arrays are in folder /data. 
 
-The folder /icmecat contains the data files for the ICMECAT catalog, which can be found in this figshare repository: https://doi.org/10.6084/m9.figshare.6356420
+The folder /icmecat contains the data files for the ICMECAT catalog, which can be found in this figshare repository: https://doi.org/10.6084/m9.figshare.6356420 (version 24 on figshare was used for this paper).
 
 How to read and use these files is shown in the notebook moestl_icmecat_results.ipynb.
 
