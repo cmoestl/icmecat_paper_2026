@@ -1,10 +1,21 @@
 # ICMECAT paper 2026
 
-Code for producing the results and figures for the Möstl et al. 2026 ICMECAT paper.
+Code for producing the results and figures for the Möstl et al. 2026 ICMECAT paper. This paper is on arxiv at: https://arxiv.org/abs/2512.04730
 
-Everything is produced with the notebook moestl_icmecat_results.ipynb, see instructions on top of this file. A .py file of the same name is also available, converted from the .ipynb file.
+Everything is produced with the notebook **moestl_icmecat_results.ipynb**, see instructions on top of this file. A .py file of the same name is also available, converted from the .ipynb file.
 
-Environment is "dro", see folder /envs.
+The conda environment is "dro", see folder /envs. For installation instructions, see the end of this readme.
+
+Figures in the article are in the folder /results, designated as fig1_... , fig_2 ... and available as pdf and png. 
+
+A file containing spacecraft positions as a numpy array in pickle format (positions_2020_all_HEEQ_1h_rad_cm.p) can be found in folder /positions.
+
+Data files for Parker Solar Probe (psp_2018_now_rtn.p) and Solar Orbiter (solo_2020_now_rtn.p) in pickle format as numpy arrays are in folder /data. 
+
+The folder /icmecat contains the data files for the ICMECAT catalog, which can be found in this figshare repository: https://doi.org/10.6084/m9.figshare.31421567
+
+How to read and use these files is shown in the notebook moestl_icmecat_results.ipynb.
+
 
 ## Installation
 
