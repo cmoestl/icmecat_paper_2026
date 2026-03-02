@@ -3,19 +3,23 @@
 
 # ## Results for Möstl et al. (2026) ICMECAT paper
 # 
-# script to produce paper results for the ICMECAT paper Möstl et al. 2026, submitted to ApJ 4 December 2025, revised March  2026
+# Script to produce paper results for the ICMECAT paper Möstl et al. 2026, submitted to ApJ 4 December 2025, revised 2 March 2026
 # 
-# - uses environment dro, see /envs/env_dro.yml
+# - This is part of a github repository https://github.com/cmoestl/icmecat_paper_2026, for which the release 1.1 refers to the revised version of the paper.
+# 
+# - This code including the data files is also published at https://doi.org/10.6084/m9.figshare.31421567 as a permanent archive.
+# 
+# - uses conda environment dro, see /envs/env_dro.yml
 #  
-# - uses ICMECAT version 2.3, released 2025 October 15 https://doi.org/10.6084/m9.figshare.6356420.v24 / this is figshare version 24
+# - uses ICMECAT version 2.3, released 2025 October 15 as figshare version 24: https://doi.org/10.6084/m9.figshare.6356420.v24 
 # 
-# - additionally reads in Solar Orbiter and Parker Solar Probe data from data files, available in the figshare repository version 27 https://doi.org/10.6084/m9.figshare.11973693.v27
+# - additionally reads in Solar Orbiter and Parker Solar Probe data from data files, available in the figshare repository version 27: https://doi.org/10.6084/m9.figshare.11973693.v27
 # 
 # - In the future, may look at power laws for each B component, total ICME B field (sheath + MO), and their solar cycle dependence
 # 
 # 
 # ---
-# ### papers
+# #### papers
 # 
 # - **Salman+ 2024** PSP events, but before Sep 2022 https://iopscience.iop.org/article/10.3847/1538-4357/ad320c
 # - **Mann+ 2023** A&A solar wind model https://www.aanda.org/articles/aa/full_html/2023/11/aa45050-22/aa45050-22.html
@@ -28,7 +32,7 @@
 # 
 # 
 
-# In[1]:
+# In[18]:
 
 
 import pickle 
@@ -68,7 +72,7 @@ def linear(x, k, d):
 
 # ## load data
 
-# In[2]:
+# In[19]:
 
 
 #load icmecat as pandas dataframe
@@ -110,7 +114,7 @@ print('all data loaded')
 
 # ### Basic ICMECAT statistics
 
-# In[3]:
+# In[20]:
 
 
 print('Number of events in ICMECAT', len(ic))
@@ -172,7 +176,7 @@ print('lastest SolO time:',solo.time[0],solo.time[-1])
 
 # ### Figure (1) for ICMECAT times and distance
 
-# In[4]:
+# In[21]:
 
 
 sns.set_context("paper")     
@@ -697,12 +701,12 @@ print('saved as ',plotfile)
 # Parameters a and b, y = a x^b: [ 9.774 -1.331]
 # 3 standard deviation on a and b [0.774 0.225]
 
-# In[7]:
+# In[37]:
 
 
 ########################## set data range for fits
 inner_boundary=0.0
-outer_boundary=6.0
+outer_boundary=5.5
 ############################
 
 print('B(r) for MO_Bmean')
@@ -772,7 +776,7 @@ ax.plot(fitx,powerlaw(fitx,param[0],param[1]),'-b')
 
 # #### Bmax in MO
 
-# In[8]:
+# In[30]:
 
 
 print('B(r) for MO_Bax')
@@ -837,7 +841,7 @@ ax.legend()
 # ### Redo fits in log-log space
 # Check whether the innermost PSP events act as outliers
 
-# In[9]:
+# In[31]:
 
 
 print('B(r) for MO_Bmean')
@@ -857,12 +861,12 @@ rem=np.where(np.logical_or(np.isnan(r), np.isnan(b)))[0]
 r=r.drop(rem)
 b=b.drop(rem)
 
-#remove ulysses because high latitude
+#remove ulysses because high latitude, does not make any difference
 #r=r.drop(iuly)
 #b=b.drop(iuly)
 
 #select distance range
-mindistfit1=0
+mindistfit1=0.0
 maxdistfit1=1.02 #(STEREO-B goes to < 1.09, Wind goes to < 1.02
 ind1au=np.where(np.logical_and(ic.mo_sc_heliodistance < maxdistfit1,ic.mo_sc_heliodistance > mindistfit1))[0]
 
@@ -934,6 +938,7 @@ b=b.drop(rem)
 #select distance range
 mindistfit3=1.02
 maxdistfit3=6.0
+
 indg1au=np.where(np.logical_and(ic.mo_sc_heliodistance < maxdistfit3,ic.mo_sc_heliodistance > mindistfit3))[0]
 
 rmeanlog3=np.log10(r[indg1au])
